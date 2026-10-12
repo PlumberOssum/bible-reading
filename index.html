@@ -13,7 +13,6 @@ html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding-bottom:env(safe-area-inset-bottom)}
 .top{position:sticky;top:0;z-index:5;background:var(--blue);color:#fff;padding:10px 16px 8px;border-bottom:3px solid var(--gold)}
 .top h1{margin:0;font-size:18px;letter-spacing:.3px}
-.stat{font-size:13px;opacity:.95}
 .tools{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-top:6px;font-size:14px}
 .tools button{font:inherit;color:#fff;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.45);border-radius:8px;padding:6px 10px}
 .tools label{display:flex;gap:6px;align-items:center}
@@ -43,7 +42,6 @@ body.hidedone .card.done{display:none}
 <body>
 <div class="top">
 <h1>Bible Reading Schedule</h1>
-<div class="stat" id="stat"></div>
 <div class="tools">
 <button id="today" type="button">Go to this week</button>
 <label>Week starts on <select id="start"></select></label>
@@ -130,7 +128,6 @@ function iso(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate
 var todayIso=iso(new Date());
 var startDay=(typeof st._start==="number"&&st._start>=0&&st._start<=6)?st._start:DEFAULT_START;
 var wrap=document.getElementById("weeks");
-var stat=document.getElementById("stat");
 var cards=[],all=[],total=0,current=null;
 
 DATA.forEach(function(w,wi){
@@ -194,8 +191,6 @@ function refresh(){
     c.cnt.textContent=k+"/"+c.boxes.length;
     c.el.classList.toggle("done",c.boxes.length>0&&k===c.boxes.length);
   });
-  var pct=total?Math.round(done*100/total):0;
-  stat.textContent=done+" of "+total+" days read ("+pct+"%)";
 }
 
 var hide=document.getElementById("hide");
