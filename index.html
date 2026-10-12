@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#003b8f">
+<title>Bible Reading 12 October 2026 to 28 December 2026</title>
+<style>
+:root{--bg:#f3f4f7;--card:#ffffff;--ink:#16181d;--mut:#6b7280;--line:#e3e6ea;--blue:#003b8f;--gold:#f2b705;--done:#e4f4e9;--today:#cfe0ff;--todayink:#003b8f;--yel:#ffe566;--tick:#1a8d44;--yelink:#2b2600;--chip:#e5e7eb;--chipink:#374151}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1115;--card:#1b1e25;--ink:#eef0f4;--mut:#9aa3b2;--line:#2b303a;--done:#14301f;--today:#1d3a73;--todayink:#ffd34d;--tick:#35c46a;--chip:#2f3542;--chipink:#d7dbe3}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding-bottom:env(safe-area-inset-bottom)}
+.top{position:sticky;top:0;z-index:5;background:var(--blue);color:#fff;padding:10px 16px 8px;border-bottom:3px solid var(--gold)}
+.top h1{margin:0;font-size:18px;letter-spacing:.3px}
+.bar{height:8px;border-radius:4px;background:rgba(255,255,255,.25);margin:8px 0 4px;overflow:hidden}
+.bar>div{height:100%;width:0;background:var(--gold);transition:width .25s}
+.stat{font-size:13px;opacity:.95}
+.tools{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-top:6px;font-size:14px}
+.tools button{font:inherit;color:#fff;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.45);border-radius:8px;padding:6px 10px}
+.tools label{display:flex;gap:6px;align-items:center}
+.tools select{font:inherit;color:#fff;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.45);border-radius:8px;padding:5px 6px}
+.tools select option{color:#16181d}
+main{padding:12px 12px 40px;max-width:640px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:0 0 12px;overflow:hidden;scroll-margin-top:128px}
+.card header{display:flex;justify-content:space-between;align-items:center;background:var(--yel);color:var(--yelink);padding:8px 12px;font-weight:700}
+.card.done header{background:#7ad39a;color:#07351a}
+.card.done{background:var(--done)}
+.card.done .cnt::after{content:" \2713"}
+.row{display:flex;align-items:center;gap:10px;min-height:52px;padding:6px 12px;border-top:1px solid var(--line);cursor:pointer}
+.row.today{background:var(--today);box-shadow:inset 7px 0 0 var(--todayink)}
+.row.today .ref{font-weight:800}
+.row.today .dt{color:var(--todayink);font-weight:700}
+.row.today .dt{text-align:right}
+.row.today .dt::before{content:"TODAY";display:block;font-size:11px;letter-spacing:.8px}
+.row input{width:28px;height:28px;flex:none;accent-color:var(--tick)}
+.chip{flex:none;min-width:48px;text-align:center;font-weight:700;font-size:13px;border-radius:6px;padding:4px 6px;background:var(--chip);color:var(--chipink)}
+.chip.m{background:var(--yel);color:var(--yelink)}
+.ref{flex:1;font-weight:700;font-size:17px;word-break:break-word}
+.dt{flex:none;font-size:12px;color:var(--mut)}
+.row.empty{cursor:default;opacity:.55}
+body.hidedone .card.done{display:none}
+</style>
+</head>
+<body>
+<div class="top">
+<h1>Bible Reading 12 October 2026 to 28 December 2026</h1>
+<div class="bar"><div id="bar"></div></div>
+<div class="stat" id="stat"></div>
+<div class="tools">
+<button id="today" type="button">Go to this week</button>
+<label>Week starts on <select id="start"></select></label>
+<label><input type="checkbox" id="hide"> Hide finished weeks</label>
+<button id="reset" type="button">Clear ticks</button>
+</div>
+</div>
+<main id="weeks"></main>
+<script>
+(function(){
+var DATA=[{"m":"2026-10-12","t":"October 12","c":["Jeremiah 42:1-12","Jeremiah 42:13-22","Jeremiah 43:1-7","Jeremiah 43:8-44:6","Jeremiah 44:7-14","Jeremiah 44:15-23","Jeremiah 44:24-30"]},
+{"m":"2026-10-19","t":"October 19","c":["Jeremiah 45:1-5","Jeremiah 46:1-5","Jeremiah 46:6-9","Jeremiah 46:10-12","Jeremiah 46:13-19","Jeremiah 46:20-25","Jeremiah 46:26-28"]},
+{"m":"2026-10-26","t":"October 26","c":["Jeremiah 47:1-7","Jeremiah 48:1-8","Jeremiah 48:9-13","Jeremiah 48:14-24","Jeremiah 48:25-32","Jeremiah 48:33-39","Jeremiah 48:40-47"]},
+{"m":"2026-11-02","t":"November 2","c":["Jeremiah 49:1-12","Jeremiah 49:13-27","Jeremiah 49:28-39","Jeremiah 50:1-10","Jeremiah 50:11-22","Jeremiah 50:23-34","Jeremiah 50:35-46"]},
+{"m":"2026-11-09","t":"November 9","c":["Jeremiah 51:1-15","Jeremiah 51:16-29","Jeremiah 51:30-44","Jeremiah 51:45-58","Jeremiah 51:59-52:7","Jeremiah 52:8-20","Jeremiah 52:21-34"]},
+{"m":"2026-11-16","t":"November 16","c":["Lamentations 1:1-6","Lamentations 1:7-12","Lamentations 1:13-19","Lamentations 1:20-2:3","Lamentations 2:4-9","Lamentations 2:10-15","Lamentations 2:16-22"]},
+{"m":"2026-11-23","t":"November 23","c":["Lamentations 3:1-18","Lamentations 3:19-36","Lamentations 3:37-57","Lamentations 3:58-4:5","Lamentations 4:6-14","Lamentations 4:15-22","Lamentations 5:1-22"]},
+{"m":"2026-11-30","t":"November 30","c":["Ezekiel 1:1-9","Ezekiel 1:10-14","Ezekiel 1:15-21","Ezekiel 1:22-24","Ezekiel 1:25-28","Ezekiel 2:1-5","Ezekiel 2:6-10"]},
+{"m":"2026-12-07","t":"December 7","c":["Ezekiel 3:1-9","Ezekiel 3:10-15","Ezekiel 3:16-21","Ezekiel 3:22-27","Ezekiel 4:1-6a","Ezekiel 4:6b-11","Ezekiel 4:12-17"]},
+{"m":"2026-12-14","t":"December 14","c":["Ezekiel 5:1-4","Ezekiel 5:5-9","Ezekiel 5:10-13","Ezekiel 5:14-17","Ezekiel 6:1-7","Ezekiel 6:8-10","Ezekiel 6:11-14"]},
+{"m":"2026-12-21","t":"December 21","c":["Ezekiel 7:1-7","Ezekiel 7:8-13","Ezekiel 7:14-21","Ezekiel 7:22-27","Ezekiel 8:1-6","Ezekiel 8:7-12","Ezekiel 8:13-18"]},
+{"m":"2026-12-28","t":"December 28","c":["Ezekiel 9:1-4","Ezekiel 9:5-7","Ezekiel 9:8-11","Ezekiel 10:1-5","Ezekiel 10:6-13","Ezekiel 10:14-17","Ezekiel 10:18-22"]}];
+var DEFAULT_START=5;
+var KEY="bible-reading-2026-10-12";
+var SHORT=["SUN","MON","TUE","WED","THU","FRI","SAT"];
+var FULL=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+var MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+var st={};
+try{st=JSON.parse(localStorage.getItem(KEY)||"{}")||{};}catch(e){st={};}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){}}
+function pad(n){return n<10?"0"+n:""+n;}
+function iso(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());}
+var todayIso=iso(new Date());
+var startDay=(typeof st._start==="number"&&st._start>=0&&st._start<=6&&st._start!==1)?st._start:DEFAULT_START;
+var wrap=document.getElementById("weeks");
+var bar=document.getElementById("bar");
+var stat=document.getElementById("stat");
+var cards=[],all=[],total=0,current=null;
+
+DATA.forEach(function(w,wi){
+  var el=document.createElement("section");el.className="card";
+  var head=document.createElement("header");
+  var t=document.createElement("span");t.textContent="Week of "+w.t;
+  var cnt=document.createElement("span");cnt.className="cnt";
+  head.appendChild(t);head.appendChild(cnt);el.appendChild(head);
+  var mine=[],rows=[];
+  w.c.forEach(function(text,di){
+    var row=document.createElement("label");row.className="row";
+    var cb=document.createElement("input");cb.type="checkbox";
+    var chip=document.createElement("span");chip.className="chip";
+    var ref=document.createElement("span");ref.className="ref";
+    var dt=document.createElement("span");dt.className="dt";
+    if(text===""){
+      cb.disabled=true;row.className+=" empty";ref.textContent="-";
+    }else{
+      ref.textContent=text;
+      var id=wi+"-"+di;
+      cb.checked=!!st[id];
+      cb.addEventListener("change",function(){
+        if(cb.checked)st[id]=1;else delete st[id];
+        save();refresh();
+      });
+      mine.push(cb);all.push(cb);total++;
+    }
+    row.appendChild(cb);row.appendChild(chip);row.appendChild(ref);row.appendChild(dt);
+    el.appendChild(row);
+    rows.push({row:row,chip:chip,dt:dt});
+  });
+  wrap.appendChild(el);
+  cards.push({el:el,cnt:cnt,boxes:mine,rows:rows});
+});
+
+/* Day names and dates depend on the chosen start day. */
+function layout(){
+  var before=(((1-startDay)%7)+7)%7;
+  current=null;
+  cards.forEach(function(c,wi){
+    var p=DATA[wi].m.split("-");
+    c.rows.forEach(function(r,di){
+      var d=new Date(+p[0],+p[1]-1,+p[2]-before+di);
+      var dow=(startDay+di)%7;
+      r.chip.textContent=SHORT[dow];
+      r.chip.className="chip"+(dow===1?" m":"");
+      r.dt.textContent=d.getDate()+" "+MONTHS[d.getMonth()];
+      var isToday=iso(d)===todayIso;
+      r.row.classList.toggle("today",isToday);
+      if(isToday)current=c.el;
+    });
+  });
+}
+
+function refresh(){
+  var done=0;
+  cards.forEach(function(c){
+    var k=0;
+    c.boxes.forEach(function(b){if(b.checked)k++;});
+    done+=k;
+    c.cnt.textContent=k+"/"+c.boxes.length;
+    c.el.classList.toggle("done",c.boxes.length>0&&k===c.boxes.length);
+  });
+  var pct=total?Math.round(done*100/total):0;
+  bar.style.width=pct+"%";
+  stat.textContent=done+" of "+total+" days read ("+pct+"%)";
+}
+
+var hide=document.getElementById("hide");
+function applyHide(){document.body.classList.toggle("hidedone",hide.checked);}
+hide.checked=!!st._hide;
+hide.addEventListener("change",function(){
+  if(hide.checked)st._hide=1;else delete st._hide;
+  save();applyHide();
+});
+
+var sel=document.getElementById("start");
+[2,3,4,5,6,0].forEach(function(d){
+  var o=document.createElement("option");o.value=d;o.textContent=FULL[d];sel.appendChild(o);
+});
+sel.value=startDay;
+sel.addEventListener("change",function(){
+  startDay=parseInt(sel.value,10);
+  st._start=startDay;save();layout();
+});
+
+function jump(smooth){
+  var target=current;
+  if(!target&&cards.length){
+    target=todayIso<DATA[0].m?cards[0].el:cards[cards.length-1].el;
+  }
+  if(target)target.scrollIntoView({block:"start",behavior:smooth?"smooth":"auto"});
+}
+document.getElementById("today").addEventListener("click",function(){jump(true);});
+document.getElementById("reset").addEventListener("click",function(){
+  if(!confirm("Clear every tick?"))return;
+  var h=st._hide,s0=st._start;st={};
+  if(h)st._hide=h;
+  if(typeof s0==="number")st._start=s0;
+  save();
+  all.forEach(function(b){b.checked=false;});
+  refresh();
+});
+
+applyHide();
+layout();
+refresh();
+if(current)setTimeout(function(){jump(false);},50);
+})();
+</script>
+</body>
+</html>
