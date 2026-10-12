@@ -13,8 +13,6 @@ html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding-bottom:env(safe-area-inset-bottom)}
 .top{position:sticky;top:0;z-index:5;background:var(--blue);color:#fff;padding:10px 16px 8px;border-bottom:3px solid var(--gold)}
 .top h1{margin:0;font-size:18px;letter-spacing:.3px}
-.bar{height:8px;border-radius:4px;background:rgba(255,255,255,.25);margin:8px 0 4px;overflow:hidden}
-.bar>div{height:100%;width:0;background:var(--gold);transition:width .25s}
 .stat{font-size:13px;opacity:.95}
 .tools{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-top:6px;font-size:14px}
 .tools button{font:inherit;color:#fff;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.45);border-radius:8px;padding:6px 10px}
@@ -22,7 +20,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.3 -apple-system,
 .tools select{font:inherit;color:#fff;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.45);border-radius:8px;padding:5px 6px}
 .tools select option{color:#16181d}
 main{padding:12px 12px 40px;max-width:640px;margin:0 auto}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:0 0 12px;overflow:hidden;scroll-margin-top:128px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:0 0 12px;overflow:hidden;scroll-margin-top:110px}
 .card header{display:flex;justify-content:space-between;align-items:center;background:var(--yel);color:var(--yelink);padding:8px 12px;font-weight:700}
 .card.done header{background:#7ad39a;color:#07351a}
 .card.done{background:var(--done)}
@@ -40,45 +38,19 @@ main{padding:12px 12px 40px;max-width:640px;margin:0 auto}
 .dt{flex:none;font-size:12px;color:var(--mut)}
 .row.empty{cursor:default;opacity:.55}
 body.hidedone .card.done{display:none}
-.dlg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
-.dlg[hidden]{display:none}
-.box{background:var(--card);color:var(--ink);border-radius:14px;max-width:460px;width:100%;padding:16px}
-.box h2{margin:0 0 6px;font-size:18px}
-.box p{margin:0 0 10px;font-size:14px;color:var(--mut)}
-.box textarea{width:100%;font:13px/1.35 ui-monospace,Menlo,Consolas,monospace;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px}
-.msg{min-height:1.3em;font-size:14px;margin-top:6px}
-.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.btns button{font:inherit;padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--chip);color:var(--chipink)}
-.btns button.go{background:var(--blue);color:#fff;border-color:var(--blue)}
 </style>
 </head>
 <body>
 <div class="top">
 <h1>Bible Reading Schedule</h1>
-<div class="bar"><div id="bar"></div></div>
 <div class="stat" id="stat"></div>
 <div class="tools">
 <button id="today" type="button">Go to this week</button>
 <label>Week starts on <select id="start"></select></label>
 <label><input type="checkbox" id="hide"> Hide finished weeks</label>
-<button id="backup" type="button">Back up / restore</button>
-<button id="reset" type="button">Clear ticks</button>
 </div>
 </div>
 <main id="weeks"></main>
-<div class="dlg" id="dlg" hidden>
-<div class="box">
-<h2>Back up or restore your ticks</h2>
-<p>Copy this code and keep it somewhere safe, such as a note or a message to yourself. To restore after changing phone or clearing data, paste the code below and press Restore.</p>
-<textarea id="code" rows="4" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
-<div class="msg" id="msg"></div>
-<div class="btns">
-<button id="copy" type="button" class="go">Copy code</button>
-<button id="restore" type="button">Restore from code</button>
-<button id="close" type="button">Close</button>
-</div>
-</div>
-</div>
 <script>
 (function(){
 var DATA=[{"m":"2026-10-12","t":"October 12","c":["Jeremiah 42:1-12","Jeremiah 42:13-22","Jeremiah 43:1-7","Jeremiah 43:8-44:6","Jeremiah 44:7-14","Jeremiah 44:15-23","Jeremiah 44:24-30"]},
@@ -92,7 +64,59 @@ var DATA=[{"m":"2026-10-12","t":"October 12","c":["Jeremiah 42:1-12","Jeremiah 4
 {"m":"2026-12-07","t":"December 7","c":["Ezekiel 3:1-9","Ezekiel 3:10-15","Ezekiel 3:16-21","Ezekiel 3:22-27","Ezekiel 4:1-6a","Ezekiel 4:6b-11","Ezekiel 4:12-17"]},
 {"m":"2026-12-14","t":"December 14","c":["Ezekiel 5:1-4","Ezekiel 5:5-9","Ezekiel 5:10-13","Ezekiel 5:14-17","Ezekiel 6:1-7","Ezekiel 6:8-10","Ezekiel 6:11-14"]},
 {"m":"2026-12-21","t":"December 21","c":["Ezekiel 7:1-7","Ezekiel 7:8-13","Ezekiel 7:14-21","Ezekiel 7:22-27","Ezekiel 8:1-6","Ezekiel 8:7-12","Ezekiel 8:13-18"]},
-{"m":"2026-12-28","t":"December 28","c":["Ezekiel 9:1-4","Ezekiel 9:5-7","Ezekiel 9:8-11","Ezekiel 10:1-5","Ezekiel 10:6-13","Ezekiel 10:14-17","Ezekiel 10:18-22"]}];
+{"m":"2026-12-28","t":"December 28","c":["Ezekiel 9:1-4","Ezekiel 9:5-7","Ezekiel 9:8-11","Ezekiel 10:1-5","Ezekiel 10:6-13","Ezekiel 10:14-17","Ezekiel 10:18-22"]},
+{"m":"2027-01-04","t":"January 4, 2027","c":["Ezekiel 11:1-7","Ezekiel 11:8-13","Ezekiel 11:14-21","Ezekiel 11:22-12:4","Ezekiel 12:5-10","Ezekiel 12:11-20","Ezekiel 12:21-28"]},
+{"m":"2027-01-11","t":"January 11, 2027","c":["Ezekiel 13:1-7","Ezekiel 13:8-13","Ezekiel 13:14-19","Ezekiel 13:20-14:5","Ezekiel 14:6-11","Ezekiel 14:12-18","Ezekiel 14:19-23"]},
+{"m":"2027-01-18","t":"January 18, 2027","c":["Ezekiel 15:1-16:5","Ezekiel 16:6-14","Ezekiel 16:15-27","Ezekiel 16:28-37","Ezekiel 16:38-45","Ezekiel 16:46-52","Ezekiel 16:53-63"]},
+{"m":"2027-01-25","t":"January 25, 2027","c":["Ezekiel 17:1-10","Ezekiel 17:11-18","Ezekiel 17:19-24","Ezekiel 18:1-9","Ezekiel 18:10-18","Ezekiel 18:19-24","Ezekiel 18:25-32"]},
+{"m":"2027-02-01","t":"February 1, 2027","c":["Ezekiel 19:1-10","Ezekiel 19:11-20:7","Ezekiel 20:8-16","Ezekiel 20:17-26","Ezekiel 20:27-32","Ezekiel 20:33-41","Ezekiel 20:42-49"]},
+{"m":"2027-02-08","t":"February 8, 2027","c":["Ezekiel 21:1-10","Ezekiel 21:11-20","Ezekiel 21:21-27","Ezekiel 21:28-22:4","Ezekiel 22:5-12","Ezekiel 22:13-22","Ezekiel 22:23-31"]},
+{"m":"2027-02-15","t":"February 15, 2027","c":["Ezekiel 23:1-13","Ezekiel 23:14-23","Ezekiel 23:24-34","Ezekiel 23:35-45","Ezekiel 23:46-24:5","Ezekiel 24:6-17","Ezekiel 24:18-27"]},
+{"m":"2027-02-22","t":"February 22, 2027","c":["Ezekiel 25:1-5","Ezekiel 25:6-11","Ezekiel 25:12-17","Ezekiel 26:1-6","Ezekiel 26:7-12","Ezekiel 26:13-16","Ezekiel 26:17-21"]},
+{"m":"2027-03-01","t":"March 1, 2027","c":["Ezekiel 27:1-9","Ezekiel 27:10-17","Ezekiel 27:18-27","Ezekiel 27:28-36","Ezekiel 28:1-10","Ezekiel 28:11-17","Ezekiel 28:18-26"]},
+{"m":"2027-03-08","t":"March 8, 2027","c":["Ezekiel 29:1-7","Ezekiel 29:8-14","Ezekiel 29:15-21","Ezekiel 30:1-6a","Ezekiel 30:6b-12","Ezekiel 30:13-19","Ezekiel 30:20-26"]},
+{"m":"2027-03-15","t":"March 15, 2027","c":["Ezekiel 31:1-9","Ezekiel 31:10-14","Ezekiel 31:15-18","Ezekiel 32:1-8","Ezekiel 32:9-16","Ezekiel 32:17-25","Ezekiel 32:26-32"]},
+{"m":"2027-03-22","t":"March 22, 2027","c":["Memorial","Memorial","Memorial","Memorial","Memorial","Memorial","Memorial"]},
+{"m":"2027-03-29","t":"March 29, 2027","c":["Ezekiel 33:1-6","Ezekiel 33:7-11","Ezekiel 33:12-16","Ezekiel 33:17-22","Ezekiel 33:23-26","Ezekiel 33:27-29","Ezekiel 33:30-33"]},
+{"m":"2027-04-05","t":"April 5, 2027","c":["Ezekiel 34:1-6","Ezekiel 34:7-10","Ezekiel 34:11-14","Ezekiel 34:15-19","Ezekiel 34:20-24","Ezekiel 34:25-28","Ezekiel 34:29-31"]},
+{"m":"2027-04-12","t":"April 12, 2027","c":["Ezekiel 35:1-9","Ezekiel 35:10-15","Ezekiel 36:1-6","Ezekiel 36:7-15","Ezekiel 36:16-21","Ezekiel 36:22-28","Ezekiel 36:29-38"]},
+{"m":"2027-04-19","t":"April 19, 2027","c":["Ezekiel 37:1-4","Ezekiel 37:5-8","Ezekiel 37:9-11","Ezekiel 37:12-14","Ezekiel 37:15-20","Ezekiel 37:21-23","Ezekiel 37:24-28"]},
+{"m":"2027-04-26","t":"April 26, 2027","c":["Ezekiel 38:1-9","Ezekiel 38:10-16","Ezekiel 38:17-23","Ezekiel 39:1-7","Ezekiel 39:8-14","Ezekiel 39:15-22","Ezekiel 39:23-29"]},
+{"m":"2027-05-03","t":"May 3, 2027","c":["Ezekiel 40:1-9","Ezekiel 40:10-22","Ezekiel 40:23-37","Ezekiel 40:38-49","Ezekiel 41:1-7","Ezekiel 41:8-16","Ezekiel 41:17-26"]},
+{"m":"2027-05-10","t":"May 10, 2027","c":["Ezekiel 42:1-6","Ezekiel 42:7-12","Ezekiel 42:13-20","Ezekiel 43:1-7","Ezekiel 43:8-12","Ezekiel 43:13-18","Ezekiel 43:19-27"]},
+{"m":"2027-05-17","t":"May 17, 2027","c":["Ezekiel 44:1-8","Ezekiel 44:9-14","Ezekiel 44:15-22","Ezekiel 44:23-31","Ezekiel 45:1-8","Ezekiel 45:9-17","Ezekiel 45:18-25"]},
+{"m":"2027-05-24","t":"May 24, 2027","c":["Ezekiel 46:1-7","Ezekiel 46:8-12","Ezekiel 46:13-18","Ezekiel 46:19-24","Ezekiel 47:1-5","Ezekiel 47:6-14","Ezekiel 47:15-23"]},
+{"m":"2027-05-31","t":"May 31, 2027","c":["Ezekiel 48:1-8","Ezekiel 48:9-12","Ezekiel 48:13-17","Ezekiel 48:18-21","Ezekiel 48:22-28","Ezekiel 48:29-31","Ezekiel 48:32-35"]},
+{"m":"2027-06-07","t":"June 7, 2027","c":["Daniel 1:1-9","Daniel 1:10-21","Daniel 2:1-9","Daniel 2:10-18","Daniel 2:19-28","Daniel 2:29-40","Daniel 2:41-49"]},
+{"m":"2027-06-14","t":"June 14, 2027","c":["Daniel 3:1-3","Daniel 3:4-7","Daniel 3:8-12","Daniel 3:13-15","Daniel 3:16-20","Daniel 3:21-25","Daniel 3:26-30"]},
+{"m":"2027-06-21","t":"June 21, 2027","c":["Daniel 4:1-8","Daniel 4:9-12","Daniel 4:13-17","Daniel 4:18-22","Daniel 4:23-27","Daniel 4:28-32","Daniel 4:33-37"]},
+{"m":"2027-06-28","t":"June 28, 2027","c":["Daniel 5:1-4","Daniel 5:5-9","Daniel 5:10-12","Daniel 5:13-16","Daniel 5:17-21","Daniel 5:22-25","Daniel 5:26-31"]},
+{"m":"2027-07-05","t":"July 5, 2027","c":["Daniel 6:1-4","Daniel 6:5-8","Daniel 6:9-11","Daniel 6:12-15","Daniel 6:16-22","Daniel 6:23, 24","Daniel 6:25-28"]},
+{"m":"2027-07-12","t":"July 12, 2027","c":["Daniel 7:1-6","Daniel 7:7-12","Daniel 7:13-20","Daniel 7:21-28","Daniel 8:1-8","Daniel 8:9-19","Daniel 8:20-27"]},
+{"m":"2027-07-19","t":"July 19, 2027","c":["Daniel 9:1-7","Daniel 9:8-14","Daniel 9:15-23","Daniel 9:24-27","Daniel 10:1-7","Daniel 10:8-14","Daniel 10:15-21"]},
+{"m":"2027-07-26","t":"July 26, 2027","c":["Daniel 11:1-9","Daniel 11:10-19","Daniel 11:20-27","Daniel 11:28-33","Daniel 11:34-41","Daniel 11:42-12:5","Daniel 12:6-13"]},
+{"m":"2027-08-02","t":"August 2, 2027","c":["Hosea 1:1-5","Hosea 1:6-11","Hosea 2:1-6","Hosea 2:7-11","Hosea 2:12-17","Hosea 2:18-23","Hosea 3:1-5"]},
+{"m":"2027-08-09","t":"August 9, 2027","c":["Hosea 4:1-8","Hosea 4:9-14","Hosea 4:15-5:5","Hosea 5:6-15","Hosea 6:1-11","Hosea 7:1-8","Hosea 7:9-16"]},
+{"m":"2027-08-16","t":"August 16, 2027","c":["Hosea 8:1-7","Hosea 8:8-14","Hosea 9:1-6","Hosea 9:7-13","Hosea 9:14-10:4","Hosea 10:5-10","Hosea 10:11-15"]},
+{"m":"2027-08-23","t":"August 23, 2027","c":["Hosea 11:1-8","Hosea 11:9-12:4","Hosea 12:5-14","Hosea 13:1-6","Hosea 13:7-14","Hosea 13:15-14:3","Hosea 14:4-9"]},
+{"m":"2027-08-30","t":"August 30, 2027","c":["Joel 1:1-10","Joel 1:11-20","Joel 2:1-12","Joel 2:13-22","Joel 2:23-32","Joel 3:1-10","Joel 3:11-21"]},
+{"m":"2027-09-06","t":"September 6, 2027","c":["Amos 1:1-5","Amos 1:6-10","Amos 1:11-15","Amos 2:1-7","Amos 2:8-16","Amos 3:1-9","Amos 3:10-15"]},
+{"m":"2027-09-13","t":"September 13, 2027","c":["Amos 4:1-7","Amos 4:8-13","Amos 5:1-8","Amos 5:9-15","Amos 5:16-27","Amos 6:1-8","Amos 6:9-14"]},
+{"m":"2027-09-20","t":"September 20, 2027","c":["Amos 7:1-9","Amos 7:10-17","Amos 8:1-9","Amos 8:10-14","Amos 9:1-5","Amos 9:6-10","Amos 9:11-15"]},
+{"m":"2027-09-27","t":"September 27, 2027","c":["Obadiah 1-3","Obadiah 4-6","Obadiah 7-9","Obadiah 10-12","Obadiah 13-15","Obadiah 16-18","Obadiah 19-21"]},
+{"m":"2027-10-04","t":"October 4, 2027","c":["Jonah 1:1-5","Jonah 1:6-10","Jonah 1:11-17","Jonah 2:1-10","Jonah 3:1-9","Jonah 3:10-4:6","Jonah 4:7-11"]},
+{"m":"2027-10-11","t":"October 11, 2027","c":["Micah 1:1-6","Micah 1:7-11","Micah 1:12-16","Micah 2:1-6","Micah 2:7-13","Micah 3:1-6","Micah 3:7-12"]},
+{"m":"2027-10-18","t":"October 18, 2027","c":["Micah 4:1-3","Micah 4:4-7","Micah 4:8-10","Micah 4:11-13","Micah 5:1-5","Micah 5:6-9","Micah 5:10-15"]},
+{"m":"2027-10-25","t":"October 25, 2027","c":["Micah 6:1-6","Micah 6:7-11","Micah 6:12-16","Micah 7:1-5","Micah 7:6-10","Micah 7:11-15","Micah 7:16-20"]},
+{"m":"2027-11-01","t":"November 1, 2027","c":["Nahum 1:1-8","Nahum 1:9-15","Nahum 2:1-6","Nahum 2:7-13","Nahum 3:1-7","Nahum 3:8-13","Nahum 3:14-19"]},
+{"m":"2027-11-08","t":"November 8, 2027","c":["Habakkuk 1:1-9","Habakkuk 1:10-17","Habakkuk 2:1-6","Habakkuk 2:7-14","Habakkuk 2:15-20","Habakkuk 3:1-9","Habakkuk 3:10-19"]},
+{"m":"2027-11-15","t":"November 15, 2027","c":["Zephaniah 1:1-10","Zephaniah 1:11-18","Zephaniah 2:1-8","Zephaniah 2:9-15","Zephaniah 3:1-8","Zephaniah 3:9-15","Zephaniah 3:16-20"]},
+{"m":"2027-11-22","t":"November 22, 2027","c":["Haggai 1:1-6","Haggai 1:7-11","Haggai 1:12-15","Haggai 2:1-5","Haggai 2:6-12","Haggai 2:13-17","Haggai 2:18-23"]},
+{"m":"2027-11-29","t":"November 29, 2027","c":["Zechariah 1:1-6","Zechariah 1:7-17","Zechariah 1:18-2:5","Zechariah 2:6-13","Zechariah 3:1-7","Zechariah 3:8-4:5","Zechariah 4:6-14"]},
+{"m":"2027-12-06","t":"December 6, 2027","c":["Zechariah 5:1-11","Zechariah 6:1-8","Zechariah 6:9-15","Zechariah 7:1-12","Zechariah 7:13-8:6","Zechariah 8:7-15","Zechariah 8:16-23"]},
+{"m":"2027-12-13","t":"December 13, 2027","c":["Zechariah 9:1-7","Zechariah 9:8-12","Zechariah 9:13-10:2","Zechariah 10:3-7","Zechariah 10:8-11:3","Zechariah 11:4-11","Zechariah 11:12-17"]},
+{"m":"2027-12-20","t":"December 20, 2027","c":["Zechariah 12:1-6","Zechariah 12:7-14","Zechariah 13:1-9","Zechariah 14:1-5","Zechariah 14:6-11","Zechariah 14:12-15","Zechariah 14:16-21"]},
+{"m":"2027-12-27","t":"December 27, 2027","c":["Malachi 1:1-8a","Malachi 1:8b-14","Malachi 2:1-9","Malachi 2:10-17","Malachi 3:1-7","Malachi 3:8-15","Malachi 3:16-4:6"]}];
 var DEFAULT_START=5;
 var KEY="bible-reading-ticks";
 var SHORT=["SUN","MON","TUE","WED","THU","FRI","SAT"];
@@ -106,7 +130,6 @@ function iso(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate
 var todayIso=iso(new Date());
 var startDay=(typeof st._start==="number"&&st._start>=0&&st._start<=6)?st._start:DEFAULT_START;
 var wrap=document.getElementById("weeks");
-var bar=document.getElementById("bar");
 var stat=document.getElementById("stat");
 var cards=[],all=[],total=0,current=null;
 
@@ -172,7 +195,6 @@ function refresh(){
     c.el.classList.toggle("done",c.boxes.length>0&&k===c.boxes.length);
   });
   var pct=total?Math.round(done*100/total):0;
-  bar.style.width=pct+"%";
   stat.textContent=done+" of "+total+" days read ("+pct+"%)";
 }
 
@@ -202,74 +224,6 @@ function jump(smooth){
   if(target)target.scrollIntoView({block:"start",behavior:smooth?"smooth":"auto"});
 }
 document.getElementById("today").addEventListener("click",function(){jump(true);});
-document.getElementById("reset").addEventListener("click",function(){
-  if(!confirm("Clear every tick?"))return;
-  var h=st._hide,s0=st._start;st={};
-  if(h)st._hide=h;
-  if(typeof s0==="number")st._start=s0;
-  save();
-  all.forEach(function(b){b.checked=false;});
-  refresh();
-});
-
-/* ---- Back up / restore ---- */
-var dlg=document.getElementById("dlg"),codeBox=document.getElementById("code"),msg=document.getElementById("msg");
-function makeCode(){
-  var map={};
-  Object.keys(st).forEach(function(k){
-    var m=/^(\d{4}-\d\d-\d\d)-([0-6])$/.exec(k);
-    if(m)map[m[1]]=(map[m[1]]||0)|(1<<parseInt(m[2],10));
-  });
-  var parts=Object.keys(map).sort().map(function(d){return d+"="+map[d].toString(16);});
-  return "BR2:"+startDay+":"+parts.join(",");
-}
-function say(t,bad){msg.textContent=t;msg.style.color=bad?"#c0392b":"#1a8d44";}
-function applyCode(text){
-  var m=/^\s*BR2:([0-6]):([0-9a-f=,\-]*)\s*$/i.exec(text);
-  if(!m)return "That code isn't recognised. Paste the whole code, starting with BR2.";
-  var ns={};
-  if(st._hide)ns._hide=st._hide;
-  var sd=parseInt(m[1],10);
-  ns._start=sd;
-  var count=0,bad=false;
-  if(m[2]!==""){
-    m[2].split(",").forEach(function(part){
-      var q=/^(\d{4}-\d\d-\d\d)=([0-9a-f]{1,2})$/i.exec(part);
-      if(!q){bad=true;return;}
-      var mask=parseInt(q[2],16);
-      for(var d=0;d<7;d++)if(mask&(1<<d)){ns[q[1]+"-"+d]=1;count++;}
-    });
-  }
-  if(bad)return "That code looks damaged or cut short. Paste the whole code.";
-  st=ns;
-  if(typeof st._start==="number"){startDay=st._start;sel.value=startDay;}
-  cards.forEach(function(c){c.rows.forEach(function(r){if(r.live)r.cb.checked=!!st[r.id];});});
-  save();layout();refresh();
-  return count;
-}
-document.getElementById("backup").addEventListener("click",function(){
-  codeBox.value=makeCode();msg.textContent="";dlg.hidden=false;
-});
-document.getElementById("close").addEventListener("click",function(){dlg.hidden=true;});
-dlg.addEventListener("click",function(e){if(e.target===dlg)dlg.hidden=true;});
-document.getElementById("copy").addEventListener("click",function(){
-  codeBox.value=makeCode();codeBox.focus();codeBox.select();
-  var done=function(){say("Code copied. Keep it somewhere safe.",false);};
-  var fail=function(){
-    try{if(document.execCommand("copy")){done();return;}}catch(e){}
-    say("Press and hold the code, then choose Copy.",true);
-  };
-  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(codeBox.value).then(done,fail);
-  else fail();
-});
-document.getElementById("restore").addEventListener("click",function(){
-  var text=codeBox.value;
-  if(!/^\s*BR2:/i.test(text)){say("Paste a backup code in the box first.",true);return;}
-  if(!confirm("Replace your current ticks with this backup?"))return;
-  var res=applyCode(text);
-  if(typeof res==="string")say(res,true);else say("Restored "+res+" ticked days.",false);
-});
-
 applyHide();
 layout();
 refresh();
