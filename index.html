@@ -104,7 +104,7 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){}}
 function pad(n){return n<10?"0"+n:""+n;}
 function iso(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());}
 var todayIso=iso(new Date());
-var startDay=(typeof st._start==="number"&&st._start>=0&&st._start<=6&&st._start!==1)?st._start:DEFAULT_START;
+var startDay=(typeof st._start==="number"&&st._start>=0&&st._start<=6)?st._start:DEFAULT_START;
 var wrap=document.getElementById("weeks");
 var bar=document.getElementById("bar");
 var stat=document.getElementById("stat");
@@ -185,7 +185,7 @@ hide.addEventListener("change",function(){
 });
 
 var sel=document.getElementById("start");
-[2,3,4,5,6,0].forEach(function(d){
+[1,2,3,4,5,6,0].forEach(function(d){
   var o=document.createElement("option");o.value=d;o.textContent=FULL[d];sel.appendChild(o);
 });
 sel.value=startDay;
@@ -230,7 +230,7 @@ function applyCode(text){
   var ns={};
   if(st._hide)ns._hide=st._hide;
   var sd=parseInt(m[1],10);
-  if(sd!==1)ns._start=sd;else if(typeof st._start==="number")ns._start=st._start;
+  ns._start=sd;
   var count=0,bad=false;
   if(m[2]!==""){
     m[2].split(",").forEach(function(part){
