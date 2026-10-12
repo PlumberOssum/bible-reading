@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#003b8f">
-<title>Bible Reading 12 October 2026 to 28 December 2026</title>
+<title>Bible Reading Schedule</title>
 <style>
 :root{--bg:#f3f4f7;--card:#ffffff;--ink:#16181d;--mut:#6b7280;--line:#e3e6ea;--blue:#003b8f;--gold:#f2b705;--done:#e4f4e9;--today:#cfe0ff;--todayink:#003b8f;--yel:#ffe566;--tick:#1a8d44;--yelink:#2b2600;--chip:#e5e7eb;--chipink:#374151}
 @media (prefers-color-scheme:dark){:root{--bg:#0f1115;--card:#1b1e25;--ink:#eef0f4;--mut:#9aa3b2;--line:#2b303a;--done:#14301f;--today:#1d3a73;--todayink:#ffd34d;--tick:#35c46a;--chip:#2f3542;--chipink:#d7dbe3}}
@@ -40,21 +40,45 @@ main{padding:12px 12px 40px;max-width:640px;margin:0 auto}
 .dt{flex:none;font-size:12px;color:var(--mut)}
 .row.empty{cursor:default;opacity:.55}
 body.hidedone .card.done{display:none}
+.dlg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
+.dlg[hidden]{display:none}
+.box{background:var(--card);color:var(--ink);border-radius:14px;max-width:460px;width:100%;padding:16px}
+.box h2{margin:0 0 6px;font-size:18px}
+.box p{margin:0 0 10px;font-size:14px;color:var(--mut)}
+.box textarea{width:100%;font:13px/1.35 ui-monospace,Menlo,Consolas,monospace;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px}
+.msg{min-height:1.3em;font-size:14px;margin-top:6px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.btns button{font:inherit;padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--chip);color:var(--chipink)}
+.btns button.go{background:var(--blue);color:#fff;border-color:var(--blue)}
 </style>
 </head>
 <body>
 <div class="top">
-<h1>Bible Reading 12 October 2026 to 28 December 2026</h1>
+<h1>Bible Reading Schedule</h1>
 <div class="bar"><div id="bar"></div></div>
 <div class="stat" id="stat"></div>
 <div class="tools">
 <button id="today" type="button">Go to this week</button>
 <label>Week starts on <select id="start"></select></label>
 <label><input type="checkbox" id="hide"> Hide finished weeks</label>
+<button id="backup" type="button">Back up / restore</button>
 <button id="reset" type="button">Clear ticks</button>
 </div>
 </div>
 <main id="weeks"></main>
+<div class="dlg" id="dlg" hidden>
+<div class="box">
+<h2>Back up or restore your ticks</h2>
+<p>Copy this code and keep it somewhere safe, such as a note or a message to yourself. To restore after changing phone or clearing data, paste the code below and press Restore.</p>
+<textarea id="code" rows="4" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
+<div class="msg" id="msg"></div>
+<div class="btns">
+<button id="copy" type="button" class="go">Copy code</button>
+<button id="restore" type="button">Restore from code</button>
+<button id="close" type="button">Close</button>
+</div>
+</div>
+</div>
 <script>
 (function(){
 var DATA=[{"m":"2026-10-12","t":"October 12","c":["Jeremiah 42:1-12","Jeremiah 42:13-22","Jeremiah 43:1-7","Jeremiah 43:8-44:6","Jeremiah 44:7-14","Jeremiah 44:15-23","Jeremiah 44:24-30"]},
@@ -70,7 +94,7 @@ var DATA=[{"m":"2026-10-12","t":"October 12","c":["Jeremiah 42:1-12","Jeremiah 4
 {"m":"2026-12-21","t":"December 21","c":["Ezekiel 7:1-7","Ezekiel 7:8-13","Ezekiel 7:14-21","Ezekiel 7:22-27","Ezekiel 8:1-6","Ezekiel 8:7-12","Ezekiel 8:13-18"]},
 {"m":"2026-12-28","t":"December 28","c":["Ezekiel 9:1-4","Ezekiel 9:5-7","Ezekiel 9:8-11","Ezekiel 10:1-5","Ezekiel 10:6-13","Ezekiel 10:14-17","Ezekiel 10:18-22"]}];
 var DEFAULT_START=5;
-var KEY="bible-reading-2026-10-12";
+var KEY="bible-reading-ticks";
 var SHORT=["SUN","MON","TUE","WED","THU","FRI","SAT"];
 var FULL=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 var MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -103,7 +127,7 @@ DATA.forEach(function(w,wi){
       cb.disabled=true;row.className+=" empty";ref.textContent="-";
     }else{
       ref.textContent=text;
-      var id=wi+"-"+di;
+      var id=w.m+"-"+di;
       cb.checked=!!st[id];
       cb.addEventListener("change",function(){
         if(cb.checked)st[id]=1;else delete st[id];
@@ -113,7 +137,7 @@ DATA.forEach(function(w,wi){
     }
     row.appendChild(cb);row.appendChild(chip);row.appendChild(ref);row.appendChild(dt);
     el.appendChild(row);
-    rows.push({row:row,chip:chip,dt:dt});
+    rows.push({row:row,chip:chip,dt:dt,cb:cb,id:w.m+"-"+di,live:text!==""});
   });
   wrap.appendChild(el);
   cards.push({el:el,cnt:cnt,boxes:mine,rows:rows});
@@ -186,6 +210,64 @@ document.getElementById("reset").addEventListener("click",function(){
   save();
   all.forEach(function(b){b.checked=false;});
   refresh();
+});
+
+/* ---- Back up / restore ---- */
+var dlg=document.getElementById("dlg"),codeBox=document.getElementById("code"),msg=document.getElementById("msg");
+function makeCode(){
+  var map={};
+  Object.keys(st).forEach(function(k){
+    var m=/^(\d{4}-\d\d-\d\d)-([0-6])$/.exec(k);
+    if(m)map[m[1]]=(map[m[1]]||0)|(1<<parseInt(m[2],10));
+  });
+  var parts=Object.keys(map).sort().map(function(d){return d+"="+map[d].toString(16);});
+  return "BR2:"+startDay+":"+parts.join(",");
+}
+function say(t,bad){msg.textContent=t;msg.style.color=bad?"#c0392b":"#1a8d44";}
+function applyCode(text){
+  var m=/^\s*BR2:([0-6]):([0-9a-f=,\-]*)\s*$/i.exec(text);
+  if(!m)return "That code isn't recognised. Paste the whole code, starting with BR2.";
+  var ns={};
+  if(st._hide)ns._hide=st._hide;
+  var sd=parseInt(m[1],10);
+  if(sd!==1)ns._start=sd;else if(typeof st._start==="number")ns._start=st._start;
+  var count=0,bad=false;
+  if(m[2]!==""){
+    m[2].split(",").forEach(function(part){
+      var q=/^(\d{4}-\d\d-\d\d)=([0-9a-f]{1,2})$/i.exec(part);
+      if(!q){bad=true;return;}
+      var mask=parseInt(q[2],16);
+      for(var d=0;d<7;d++)if(mask&(1<<d)){ns[q[1]+"-"+d]=1;count++;}
+    });
+  }
+  if(bad)return "That code looks damaged or cut short. Paste the whole code.";
+  st=ns;
+  if(typeof st._start==="number"){startDay=st._start;sel.value=startDay;}
+  cards.forEach(function(c){c.rows.forEach(function(r){if(r.live)r.cb.checked=!!st[r.id];});});
+  save();layout();refresh();
+  return count;
+}
+document.getElementById("backup").addEventListener("click",function(){
+  codeBox.value=makeCode();msg.textContent="";dlg.hidden=false;
+});
+document.getElementById("close").addEventListener("click",function(){dlg.hidden=true;});
+dlg.addEventListener("click",function(e){if(e.target===dlg)dlg.hidden=true;});
+document.getElementById("copy").addEventListener("click",function(){
+  codeBox.value=makeCode();codeBox.focus();codeBox.select();
+  var done=function(){say("Code copied. Keep it somewhere safe.",false);};
+  var fail=function(){
+    try{if(document.execCommand("copy")){done();return;}}catch(e){}
+    say("Press and hold the code, then choose Copy.",true);
+  };
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(codeBox.value).then(done,fail);
+  else fail();
+});
+document.getElementById("restore").addEventListener("click",function(){
+  var text=codeBox.value;
+  if(!/^\s*BR2:/i.test(text)){say("Paste a backup code in the box first.",true);return;}
+  if(!confirm("Replace your current ticks with this backup?"))return;
+  var res=applyCode(text);
+  if(typeof res==="string")say(res,true);else say("Restored "+res+" ticked days.",false);
 });
 
 applyHide();
